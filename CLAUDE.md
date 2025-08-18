@@ -5,6 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 项目概述
 
 这是一个基于 Vue 3 + Vite + Element Plus 的 AI 面试应用前端项目。应用采用组合式 API 风格，使用 TypeScript 模块规范。
+我希望每当我有需求提出或者改动的时候，如果和该文档有冲突，你要及时修改文档。如果是文档中没有记录的，请记录到文档中。
 
 ## 开发命令
 
