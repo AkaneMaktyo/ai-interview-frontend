@@ -2,87 +2,50 @@
   <div id="app">
     <el-container>
       <el-header>
-        <h1>AI Interview Application</h1>
+        <div class="header-content">
+          <h1>AI面试系统</h1>
+          <el-menu 
+            :default-active="$route.path"
+            class="nav-menu"
+            mode="horizontal"
+            router
+            background-color="#409eff"
+            text-color="#fff"
+            active-text-color="#fff"
+            @select="handleSelect"
+          >
+            <el-menu-item index="/">
+              <el-icon><House /></el-icon>
+              <span>首页</span>
+            </el-menu-item>
+            <el-menu-item index="/interview">
+              <el-icon><EditPen /></el-icon>
+              <span>开始面试</span>
+            </el-menu-item>
+            <el-menu-item index="/history">
+              <el-icon><Document /></el-icon>
+              <span>学习历史</span>
+            </el-menu-item>
+            <el-menu-item index="/wrong-questions">
+              <el-icon><Warning /></el-icon>
+              <span>错题集</span>
+            </el-menu-item>
+          </el-menu>
+        </div>
       </el-header>
       <el-main>
-        <el-card class="demo-card">
-          <template #header>
-            <div class="card-header">
-              <span>系统状态</span>
-            </div>
-          </template>
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-button type="primary" @click="testBackend" :loading="loading">
-                <el-icon><Connection /></el-icon>
-                测试后端连接
-              </el-button>
-            </el-col>
-            <el-col :span="12">
-              <el-tag :type="status.type" size="large">
-                {{ status.message }}
-              </el-tag>
-            </el-col>
-          </el-row>
-          <el-divider />
-          <div v-if="backendResponse" class="response-area">
-            <h3>后端响应:</h3>
-            <el-alert
-              :title="backendResponse"
-              type="success"
-              :closable="false"
-              show-icon>
-            </el-alert>
-          </div>
-        </el-card>
+        <router-view />
       </el-main>
     </el-container>
   </div>
 </template>
 
-<script>
-import { ref } from 'vue'
-import axios from 'axios'
-import { ElMessage } from 'element-plus'
+<script setup>
+import { House, EditPen, Document, Warning } from '@element-plus/icons-vue'
 
-export default {
-  name: 'App',
-  setup() {
-    const loading = ref(false)
-    const backendResponse = ref('')
-    const status = ref({
-      type: 'info',
-      message: '未连接'
-    })
-
-    const testBackend = async () => {
-      loading.value = true
-      try {
-        const response = await axios.get('/api/hello')
-        backendResponse.value = response.data
-        status.value = {
-          type: 'success',
-          message: '连接成功'
-        }
-        ElMessage.success('后端连接成功!')
-      } catch (error) {
-        status.value = {
-          type: 'danger',
-          message: '连接失败'
-        }
-        ElMessage.error('后端连接失败: ' + error.message)
-      } finally {
-        loading.value = false
-      }
-    }
-
-    return {
-      loading,
-      backendResponse,
-      status,
-      testBackend
-    }
-  }
+// 导航菜单选择处理
+const handleSelect = (index) => {
+  console.log('导航到:', index)
 }
 </script>
 
@@ -92,31 +55,76 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+  min-height: 100vh;
 }
 
 .el-header {
   background-color: #409eff;
   color: white;
-  text-align: center;
-  line-height: 60px;
+  padding: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  height: auto;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 60px;
+}
+
+.header-content h1 {
+  margin: 0;
+  font-size: 24px;
+  color: white;
+}
+
+.nav-menu {
+  border: none;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.nav-menu .el-menu-item {
+  border-bottom: none;
+}
+
+.nav-menu .el-menu-item:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+}
+
+.nav-menu .el-menu-item.is-active {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border-bottom: 2px solid #fff !important;
 }
 
 .el-main {
-  padding: 20px;
+  padding: 0;
+  background-color: #f5f7fa;
 }
 
-.demo-card {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.response-area {
-  margin-top: 20px;
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    height: auto;
+    padding: 10px;
+  }
+  
+  .header-content h1 {
+    margin-bottom: 10px;
+    font-size: 20px;
+  }
+  
+  .nav-menu {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .nav-menu .el-menu-item {
+    padding: 0 10px;
+  }
 }
 </style>
